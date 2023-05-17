@@ -23,8 +23,8 @@ public class Main {
         output = input;
         String key= "This";
 
-        bruteForce(input, key);
-        //badSymbol(key,input);
+        //bruteForce(input, key);
+        badSymbol(key,input);
         //boyerMoore(input,key);
 
         File myObj = new File("src/output.html");
@@ -35,7 +35,9 @@ public class Main {
         long endTime   = System.nanoTime();
 
         long totalTime = TimeUnit.NANOSECONDS.toMillis(endTime-startTime);
-        System.out.println(bruteForceComp);
+        //System.out.println(bruteForceComp);
+        System.out.println(horspoolComp);
+        //System.out.println(boyerComp);
         System.out.println(totalTime);
     }
 
@@ -110,15 +112,24 @@ public class Main {
     }
 
 
-
     public static int compare(String pattern, String text, int index) {
         if (text.substring(index - pattern.length() + 1, index + 1).equals(pattern)) {
-            horspoolComp+= pattern.length();
+            horspoolComp += pattern.length();
             announceKey(index-pattern.length()+param, pattern.length());
             param+=13;
             return 1;
         }
+        else{
+            for(int i = 0; i < pattern.length(); i++){
+                horspoolComp++;
+                if(text.charAt(index-i) != pattern.charAt(pattern.length()-i-1)){
+                    break;
+                }
+               
+            }
+        }
         char mismatchedChar = text.charAt(index);
+        System.out.println(" mismatch -> "+mismatchedChar);
         int shiftVal = shiftHorspool(mismatchedChar, pattern);
         return Math.max(1, shiftVal);
     }
@@ -128,7 +139,7 @@ public class Main {
         int shiftval = pattern.length();
 
         for (int i = pattern.length() - 1; i >= 0; i--) {
-            if (letter == pattern.charAt(i)) {
+            if (letter == pattern.charAt(i) && (i != pattern.length() -1)) {
                 return shiftval - i - 1;
             }
         }
